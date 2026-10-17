@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Surface & Background (Light) */
+  --bg-primary: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F1F5F9;
+  --border-subtle: #E2E8F0;
+  --border-strong: #CBD5E1;
+
+  /* Text & Foreground */
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #94A3B8;
+
+  /* Industrial Accents: Copper & Cyan */
+  --copper-primary: #B45309;
+  --copper-glow: rgba(180, 83, 9, 0.15);
+  --cyan-accent: #0284C7;
+
+  /* Status Tokens */
+  --status-healthy: #059669;
+  --status-healthy-bg: #ECFDF5;
+  --status-warning: #D97706;
+  --status-warning-bg: #FFFBEB;
+  --status-critical: #DC2626;
+  --status-critical-bg: #FEF2F2;
+  --status-offline: #64748B;
+  --status-offline-bg: #F8FAFC;
+  --status-demo: #7C3AED;
+  --status-demo-bg: #F5F3FF;
+
+  /* Safe Area Insets for Mobile Devices (Notch / Home bar) */
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-left: env(safe-area-inset-left, 0px);
+  --safe-area-right: env(safe-area-inset-right, 0px);
+}
+
+.dark {
+  /* Surface & Background (Deep Navy Control Room) */
+  --bg-primary: #060A14;
+  --bg-card: #0F172A;
+  --bg-card-hover: #1E293B;
+  --border-subtle: #1E293B;
+  --border-strong: #334155;
+
+  /* Text & Foreground */
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+
+  /* Industrial Accents: Copper & Cyan */
+  --copper-primary: #F59E0B;
+  --copper-glow: rgba(245, 158, 11, 0.20);
+  --cyan-accent: #38BDF8;
+
+  /* Status Tokens */
+  --status-healthy: #10B981;
+  --status-healthy-bg: rgba(16, 185, 129, 0.12);
+  --status-warning: #F59E0B;
+  --status-warning-bg: rgba(245, 158, 11, 0.12);
+  --status-critical: #EF4444;
+  --status-critical-bg: rgba(239, 68, 68, 0.15);
+  --status-offline: #64748B;
+  --status-offline-bg: rgba(100, 116, 139, 0.15);
+  --status-demo: #A855F7;
+  --status-demo-bg: rgba(168, 85, 247, 0.15);
+}
+
+/* Ensure tabular numerals to prevent layout jitter on live sensor readings */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  -moz-font-feature-settings: "tnum";
+  -webkit-font-feature-settings: "tnum";
+  font-feature-settings: "tnum";
+}
+
+/* Mobile-friendly touch target utilities */
+@media (max-width: 640px) {
+  /* Prevents iOS Safari auto-zooming on focus when text < 16px */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Momentum scrolling for iOS & mobile browsers */
+.smooth-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Subtle modern scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.45);
+}
+
+/* Print layout optimizations for engineering lab reports */
+@media print {
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .print-card {
+    border: 1px solid #CBD5E1 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+}
