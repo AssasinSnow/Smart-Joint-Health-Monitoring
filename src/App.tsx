@@ -11,6 +11,7 @@ import { DeviceSettingsPage } from './pages/DeviceSettingsPage';
 import { MaintenanceRecordsPage } from './pages/MaintenanceRecordsPage';
 import { ProjectInfoPage } from './pages/ProjectInfoPage';
 import { useJointStore } from './store/useJointStore';
+import { initNativeMobile, updateNativeStatusBar } from './lib/capacitor';
 
 export const App: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -23,9 +24,16 @@ export const App: React.FC = () => {
     } else {
       document.documentElement.classList.remove('dark');
     }
+    // Update native mobile status bar if on Android/iOS
+    updateNativeStatusBar(isDarkMode);
+  }, [isDarkMode]);
+
+  useEffect(() => {
     // Initialize Zustand store and start telemetry ingestion
     initStore();
-  }, [initStore, isDarkMode]);
+    // Initialize native mobile splash screen and theme
+    initNativeMobile(isDarkMode);
+  }, [initStore]);
 
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>

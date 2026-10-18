@@ -1,0 +1,39 @@
+name: Build iOS App (Cloud No-Mac)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Web Assets & Sync iOS
+        run: |
+          npm run build
+          npx cap sync ios
+
+      - name: Build iOS Workspace with Xcode (Simulator / Unsigned)
+        run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace -scheme App -destination 'generic/platform=iOS Simulator' -configuration Debug clean build
+
+      - name: Upload iOS Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SmartJointMonitor-iOS-Build
+          path: ios/App/build
+          retention-days: 14

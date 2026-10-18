@@ -135,7 +135,22 @@ npm run build
 
 ---
 
-## 7. Directory Structure
+## 7. Cross-Platform Execution (Android, iOS, Laptop & PC)
+
+Smart Joint Monitor is configured to run natively across all platforms from a single codebase:
+
+| Target Platform | Technology | Launch & Build Commands |
+|---|---|---|
+| **Laptop / PC** | Desktop PWA (Standalone window) | `npm run preview` -> Click "Install App" in Chrome/Edge URL bar |
+| **Android Phone / Tablet** | Native Android App (`.apk`) | `npm run cap:sync` then `npm run cap:android` (Open in Android Studio) |
+| **iPhone / iPad** | Native iOS App (Xcode / IPA) | `npm run cap:sync` then `npm run cap:ios` (Open in Xcode on macOS) |
+| **Mobile Web Browser** | Responsive PWA | `npm run dev -- --host` -> Open local Wi-Fi URL on phone |
+
+For full deployment instructions, see the comprehensive [Cross-Platform Guide](docs/MOBILE_AND_CROSS_PLATFORM.md).
+
+---
+
+## 8. Directory Structure
 
 ```
 smart-joint-monitor/
