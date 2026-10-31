@@ -1,6 +1,7 @@
 import React from 'react';
 import { useJointStore } from '../../store/useJointStore';
 import { StatusBadge } from '../common/StatusBadge';
+import { AppLogo } from '../common/AppLogo';
 import { Sun, Moon, Menu, Download, Zap, FlaskConical } from 'lucide-react';
 import { exportToCsv } from '../../lib/formatters';
 
@@ -47,10 +48,8 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
           <Menu className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-2 min-w-0">
-          <div className="p-2 rounded-lg bg-copper-500 text-white font-bold shadow-sm flex-shrink-0">
-            <Zap className="w-4 h-4 sm:w-5 sm:h-5 fill-white" />
-          </div>
+        <div className="flex items-center gap-2.5 min-w-0">
+          <AppLogo className="w-8 h-8 sm:w-9 sm:h-9" />
           <div className="min-w-0 truncate">
             <h1 className="text-sm sm:text-base lg:text-lg font-bold text-slate-900 dark:text-white leading-tight flex items-center gap-1.5 truncate">
               <span className="truncate">Smart Joint Monitor</span>
