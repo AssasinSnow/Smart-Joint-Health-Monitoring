@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -8,9 +8,13 @@ import {
   Sliders,
   ClipboardList,
   BookOpen,
-  X
+  X,
+  Download,
+  ChevronRight
 } from 'lucide-react';
 import { useJointStore } from '../../store/useJointStore';
+import { AppLogo } from '../common/AppLogo';
+import { DownloadAppModal } from '../common/DownloadAppModal';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -19,6 +23,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { alerts, currentPoint } = useJointStore();
+  const [isDownloadOpen, setIsDownloadOpen] = useState(false);
   const unacknowledgedCount = alerts.filter(a => !a.acknowledged).length;
 
   const navItems = [
@@ -53,15 +58,23 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         }`}
       >
         <div>
-          {/* Mobile close bar */}
-          <div className="h-16 px-5 flex items-center justify-between border-b border-slate-200 dark:border-navy-700 lg:hidden">
-            <span className="font-bold text-slate-800 dark:text-slate-100 text-sm uppercase tracking-wider">
-              Navigation Menu
-            </span>
+          {/* Logo & Brand Header in Menu */}
+          <div className="h-16 px-4 sm:px-5 flex items-center justify-between border-b border-slate-200 dark:border-navy-700">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <AppLogo className="w-8 h-8 flex-shrink-0" />
+              <div className="min-w-0">
+                <span className="font-bold text-slate-900 dark:text-white text-sm block leading-tight truncate">
+                  Smart Joint Monitor
+                </span>
+                <span className="text-[10px] text-copper-600 dark:text-copper-400 font-mono block">
+                  B.Tech EEE Capstone
+                </span>
+              </div>
+            </div>
             <button
               onClick={onClose}
               aria-label="Close navigation menu"
-              className="p-2 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-navy-800 flex items-center justify-center min-w-[40px] min-h-[40px]"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-navy-800 lg:hidden flex items-center justify-center min-w-[36px] min-h-[36px]"
             >
               <X className="w-5 h-5" />
             </button>
@@ -69,7 +82,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
           {/* Navigation Links */}
           <nav className="p-3 sm:p-4 space-y-1">
-            <div className="px-3 py-2 text-[11px] font-mono uppercase font-bold tracking-wider text-slate-400 dark:text-slate-400">
+            <div className="px-3 py-1.5 text-[11px] font-mono uppercase font-bold tracking-wider text-slate-400 dark:text-slate-400">
               Operations Center
             </div>
 
@@ -81,7 +94,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                   to={item.to}
                   onClick={onClose}
                   className={({ isActive }) =>
-                    `flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-medium transition-all ${
+                    `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                       isActive
                         ? 'bg-copper-500 text-white font-semibold shadow-sm shadow-copper-500/20'
                         : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-navy-800 hover:text-slate-900 dark:hover:text-white'
@@ -101,6 +114,35 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               );
             })}
           </nav>
+
+          {/* Dedicated Download APK & App Button in Menu */}
+          <div className="px-3 sm:px-4 pt-1">
+            <button
+              onClick={() => {
+                setIsDownloadOpen(true);
+                if (isOpen) onClose();
+              }}
+              className="w-full p-2.5 rounded-xl bg-gradient-to-r from-emerald-500/10 via-copper-500/10 to-emerald-500/10 border border-emerald-500/30 hover:border-emerald-500 text-slate-800 dark:text-slate-100 flex items-center justify-between transition-all group shadow-sm text-left"
+            >
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="p-1.5 rounded-lg bg-emerald-600 text-white shadow-sm flex-shrink-0">
+                  <Download className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs font-bold flex items-center gap-1.5 truncate">
+                    <span>Download App</span>
+                    <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-mono font-bold">
+                      APK
+                    </span>
+                  </div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                    With Lightning Logo
+                  </div>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform flex-shrink-0 ml-1" />
+            </button>
+          </div>
         </div>
 
         {/* Busbar telemetry quick status footer */}
@@ -132,6 +174,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </div>
         </div>
       </aside>
+
+      {/* Download APK / App Installation Modal */}
+      <DownloadAppModal isOpen={isDownloadOpen} onClose={() => setIsDownloadOpen(false)} />
     </>
   );
 };

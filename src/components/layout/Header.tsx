@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useJointStore } from '../../store/useJointStore';
 import { StatusBadge } from '../common/StatusBadge';
 import { AppLogo } from '../common/AppLogo';
-import { Sun, Moon, Menu, Download, Zap, FlaskConical } from 'lucide-react';
+import { DownloadAppModal } from '../common/DownloadAppModal';
+import { Sun, Moon, Menu, Download, Zap, FlaskConical, Smartphone } from 'lucide-react';
 import { exportToCsv } from '../../lib/formatters';
 
 interface HeaderProps {
@@ -18,6 +19,8 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
     rollingHistory,
     setTelemetryMode
   } = useJointStore();
+
+  const [isDownloadOpen, setIsDownloadOpen] = useState(false);
 
   const handleExport = () => {
     if (rollingHistory.length === 0) return;
@@ -115,6 +118,16 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
           />
         </div>
 
+        {/* Get App / APK Button */}
+        <button
+          onClick={() => setIsDownloadOpen(true)}
+          title="Download Android APK / Install App"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-xs font-semibold transition-all shadow-sm"
+        >
+          <Smartphone className="w-3.5 h-3.5 flex-shrink-0" />
+          <span className="hidden sm:inline">Get App (APK)</span>
+        </button>
+
         {/* Export CSV button (tablet and desktop) */}
         <button
           onClick={handleExport}
@@ -134,6 +147,9 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
           {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
         </button>
       </div>
+
+      {/* Download App / APK Modal */}
+      <DownloadAppModal isOpen={isDownloadOpen} onClose={() => setIsDownloadOpen(false)} />
     </header>
   );
 };
