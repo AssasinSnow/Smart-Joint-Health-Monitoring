@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SafetyBanner } from '../components/layout/SafetyBanner';
 import {
   BookOpen,
@@ -7,10 +7,34 @@ import {
   ShieldAlert,
   Zap,
   Activity,
-  Brain
+  Brain,
+  Code,
+  Copy,
+  CheckCheck
 } from 'lucide-react';
 
 export const ProjectInfoPage: React.FC = () => {
+  const [copiedCode, setCopiedCode] = useState(false);
+
+  const esp32CodeSnippet = `// Wi-Fi Configuration
+#define WIFI_SSID           "YOUR_HOME_OR_LAB_WIFI"
+#define WIFI_PASSWORD       "YOUR_WIFI_PASSWORD"
+
+// MQTT Broker Configuration (Free public HiveMQ broker)
+#define MQTT_BROKER_HOST    "broker.hivemq.com"
+#define MQTT_BROKER_PORT    1883                    // 1883 for plain MQTT (ESP32)
+#define MQTT_CLIENT_ID      "esp32-joint-monitor-01"
+
+// Topic Configuration
+#define MQTT_PUB_TOPIC      "busbar/joint1/telemetry"
+#define MQTT_SUB_CMD_TOPIC  "busbar/joint1/commands"`;
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(esp32CodeSnippet);
+    setCopiedCode(true);
+    setTimeout(() => setCopiedCode(false), 2000);
+  };
+
   return (
     <div className="space-y-6">
       {/* Mandatory Safety Notice */}
@@ -231,6 +255,38 @@ export const ProjectInfoPage: React.FC = () => {
               <li>• Protocol: MQTT / WebSockets &amp; HTTP</li>
             </ul>
           </div>
+        </div>
+
+        {/* ESP32 Arduino secrets.h Configuration Template Card */}
+        <div className="mt-4 p-4 rounded-xl bg-slate-900 border border-slate-700/80 text-white">
+          <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-800">
+            <div className="flex items-center gap-2">
+              <Code className="w-4 h-4 text-copper-400" />
+              <span className="text-xs font-mono font-bold text-copper-300">
+                ESP32 Firmware secrets.h Configuration Block
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={handleCopyCode}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono transition-colors text-slate-300 hover:text-white border border-slate-700"
+            >
+              {copiedCode ? (
+                <>
+                  <CheckCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="text-emerald-400 font-bold">Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Copy Code</span>
+                </>
+              )}
+            </button>
+          </div>
+          <pre className="text-[11px] font-mono text-amber-200/90 leading-relaxed overflow-x-auto p-1 selection:bg-copper-500 selection:text-white">
+            {esp32CodeSnippet}
+          </pre>
         </div>
       </div>
 

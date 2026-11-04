@@ -16,7 +16,6 @@
  */
 
 #include <WiFi.h>
-#include <WiFiClientSecure.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
 #include <Wire.h>
@@ -29,6 +28,15 @@
   #include "secrets.h"
 #else
   #include "secrets.example.h"
+#endif
+
+// Support both plain MQTT (Port 1883) and TLS MQTTS (Port 8883)
+#if MQTT_BROKER_PORT == 8883
+  #include <WiFiClientSecure.h>
+  WiFiClientSecure netClient;
+#else
+  #include <WiFiClient.h>
+  WiFiClient netClient;
 #endif
 
 // =========================================================================================
@@ -61,8 +69,7 @@ const float LOCAL_TRIP_CURRENT_MAX_A   = 285.0; // Overcurrent cutoff
 const float LOCAL_TRIP_TEMP_MAX_C      = 88.0;  // Critical copper temperature
 const float LOCAL_TRIP_FORCE_MIN_N     = 3800.0;// Severe bolt tension loss
 
-// Network & MQTT Clients
-WiFiClientSecure netClient;
+// Network & MQTT Client
 PubSubClient mqttClient(netClient);
 
 // Shared Telemetry Struct
@@ -200,13 +207,21 @@ void connectMQTT() {
   mqttClient.setServer(MQTT_BROKER_HOST, MQTT_BROKER_PORT);
   Serial.printf("Connecting to MQTT Broker: %s:%d ...\n", MQTT_BROKER_HOST, MQTT_BROKER_PORT);
 
-  // In production TLS: netClient.setCACert(root_ca_pem);
+#if MQTT_BROKER_PORT == 8883
   // For sandbox testing without certificate pinning:
   netClient.setInsecure();
+#endif
 
   int retry = 0;
   while (!mqttClient.connected() && retry < 5) {
-    if (mqttClient.connect(MQTT_CLIENT_ID, MQTT_USERNAME, MQTT_PASSWORD)) {
+    bool connected = false;
+    #ifdef MQTT_USERNAME
+      connected = mqttClient.connect(MQTT_CLIENT_ID, MQTT_USERNAME, MQTT_PASSWORD);
+    #else
+      connected = mqttClient.connect(MQTT_CLIENT_ID);
+    #endif
+
+    if (connected) {
       Serial.println("MQTT Broker Connected!");
       mqttClient.subscribe(MQTT_SUB_CMD_TOPIC);
     } else {
